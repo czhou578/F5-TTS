@@ -400,6 +400,12 @@ class Trainer:
                     self.writer.add_scalar("lr", self.scheduler.get_last_lr()[0], global_update)
 
                 if global_update % self.last_per_updates == 0 and self.accelerator.sync_gradients:
+                    import glob, os
+                    for f in glob.glob(f"{self.checkpoint_path}/model_*.pt"):
+                        try:
+                            os.remove(f)
+                        except OSError:
+                            pass
                     self.save_checkpoint(global_update, last=True)
 
                 if global_update % self.save_per_updates == 0 and self.accelerator.sync_gradients:
