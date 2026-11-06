@@ -81,7 +81,10 @@ def parse_args():
 def main():
     args = parse_args()
 
-    checkpoint_path = f"/root/F5-TTS-ckpts/{args.dataset_name}"
+    # Checkpoints go to $F5TTS_CKPT_ROOT/<dataset_name> when that variable is
+    # set, else to the package's ckpts/<dataset_name> folder as upstream does.
+    ckpt_root = os.environ.get("F5TTS_CKPT_ROOT") or str(files("f5_tts").joinpath("../../ckpts"))
+    checkpoint_path = os.path.join(ckpt_root, args.dataset_name)
 
     # Model parameters based on experiment name
 
